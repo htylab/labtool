@@ -33,7 +33,7 @@ for f in ffs:
         for left, right in ASEG_pairs:
             temp[data==right] = left
         temp2 = temp * 0
-        count = 0
+        count = -1
         for kk in whole_fsv2:
             count += 1
             temp2[temp == kk] = count
