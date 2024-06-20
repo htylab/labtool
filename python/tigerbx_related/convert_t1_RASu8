@@ -1,0 +1,49 @@
+import nibabel as nib
+import os
+from nilearn.image import resample_to_img, reorder_img
+import tqdm
+from multiprocessing import Pool
+import numpy as np
+from os.path import isfile, basename, dirname, join
+
+import glob
+from os.path import *
+ffs = sorted(glob.glob('/expdata/Dataset/tigerdatav4/*/*/wmparc.nii.gz'))
+
+def resample_voxel(data_nib, voxelsize, target_shape=None, interpolation='linear'):
+    from nilearn.image import reorder_img, resample_to_img, resample_img
+    affine = data_nib.affine
+    target_affine = affine.copy()
+    
+    factor = np.zeros(3)
+    for i in range(3):
+        factor[i] = voxelsize[i] / np.sqrt(affine[0, i]**2 + affine[1, i]**2 + affine[2, i]**2)
+        target_affine[:3, i] = target_affine[:3, i]*factor[i]
+        
+    new_nib = resample_img(data_nib, target_affine=target_affine,
+                           target_shape=target_shape, interpolation=interpolation)
+    
+    return new_nib
+
+output_dir = '/expdata/Dataset/tigerdatav5/T1_u8'
+os.makedirs(output_dir, exist_ok=True)
+
+def process_file(f):
+    f = f.replace('wmparc.nii.gz', 'T1w_raw.nii.gz')
+    if isfile(f):
+        nib_orig = reorder_img(nib.load(f), resample='continuous')
+        nib_orig = resample_voxel(nib_orig, (1, 1, 1), interpolation='continuous')
+        vol = nib_orig.get_fdata()
+        vol = vol / np.max(vol) * 255
+        output_nib = nib.Nifti1Image(vol.astype(np.uint8), nib_orig.affine, nib_orig.header)
+        output_nib.header.set_data_dtype(np.uint8)
+        output_file = basename(dirname(f)) + '_' + basename(f).replace('T1w_raw.nii.gz', 'T1w_u8.nii.gz')
+        output_file = join(output_dir, output_file)
+        nib.save(output_nib, output_file)
+
+def run_multiprocessing():
+    with Pool(12) as p:
+        list(tqdm.tqdm(p.imap(process_file, ffs), total=len(ffs)))
+
+# 運行多進程處理
+run_multiprocessing()

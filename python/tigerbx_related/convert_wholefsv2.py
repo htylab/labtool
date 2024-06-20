@@ -21,8 +21,7 @@ whole_fsv2 = [
    1019, 1020, 1021, 1022, 1023, 1024, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032,
    1033, 1034, 1035, 3001, 3002, 3003, 3005, 3006, 3007, 3008, 3009, 3010, 3011, 3012,
    3013, 3014, 3015, 3016, 3017, 3018, 3019, 3020, 3021, 3022, 3023, 3024, 3025, 3026,
-   3027, 3028, 3029, 3030, 3031, 3032, 3033, 3034, 3035, 5001, 5002
-]
+   3027, 3028, 3029, 3030, 3031, 3032, 3033, 3034, 3035, 5001]
 
 ffs = sorted(glob.glob('/work/tyhuang0908/Dataset/tigerdatav4/*/*/wmparc.nii.gz'))
 
@@ -33,7 +32,7 @@ def process_file(f):
         temp = data.copy()
         temp[(data > 2000) & (data < 3000)] = temp[(data > 2000) & (data < 3000)] - 1000
         temp[(data > 4000) & (data < 5000)] = temp[(data > 4000) & (data < 5000)] - 1000
-        for left, right in ASEG_pairs:
+        for left, right in pairs:
             temp[data == right] = left
         temp2 = temp * 0
         count = -1
