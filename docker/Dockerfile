@@ -14,22 +14,23 @@ RUN pip install torch==2.5.1 torchvision torchaudio --index-url https://download
 # 安裝其他 Python 套件
 RUN pip install \
     tensorflow==2.14.0 \
-    pydicom \
-    monai \
-    torchio \
-    albumentations \
-    jupyterlab \
-    numpy \
-    scipy \
-    matplotlib \
-    opencv-python-headless \
-    nibabel \
-    nilearn \
-    dipy \
-    antspyx \
-    SimpleITK \
-    pyradiomics \
-    tqdm
+    pydicom==3.0.1 \
+    monai==1.4.0 \
+    torchio==0.20.1 \
+    albumentations==1.4.17 \
+    jupyterlab==4.2.5 \
+    numpy==1.26.4 \
+    scipy==1.14.1 \
+    matplotlib==3.7.5 \
+    opencv-python-headless==4.10.0.84 \
+    nibabel==5.2.1 \
+    nilearn==0.10.4 \
+    dipy==1.9.0 \
+    antspyx==0.5.4 \
+    SimpleITK==2.4.0 \
+    pyradiomics==3.0.1 \
+    tqdm==4.66.1
+
 
 # 設定工作目錄
 WORKDIR /NFS
